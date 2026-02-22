@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Investment Companies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .search-bar {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            width: 300px;
+            font-size: 1em;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-bar button {
+            padding: 12px 30px;
+            background: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-bar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .company-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .company-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .company-card.hidden {
+            display: none;
+        }
+
+        .company-logo {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .company-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .company-rank {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .company-info {
+            color: #666;
+            line-height: 1.8;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+
+        .company-info p {
+            margin-bottom: 8px;
+        }
+
+        .company-info strong {
+            color: #333;
+        }
+
+        .btn-details {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-details:hover {
+            background: #764ba2;
+            transform: scale(1.02);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 2em;
+        }
+
+        .close-btn {
+            font-size: 2em;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+        }
+
+        .stats {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .stats h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 50px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .search-bar input {
+                width: 100%;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .companies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>💼 Top Investment Companies</h1>
+            <p>Discover the world's leading investment firms</p>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search companies...">
+            <button onclick="searchCompanies()">Search</button>
+        </div>
+
+        <div class="companies-grid" id="companiesGrid">
+            <!-- Companies will be inserted here by JavaScript -->
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Top Investment Companies. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Modal for Company Details -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const companies = [
+            {
+                rank: 1,
+                name: "BlackRock",
+                aum: "$9.3 Trillion",
+                founded: "1988",
+                headquarters: "New York, USA",
+                description: "BlackRock is the world's largest asset manager with trillions in assets under management. Known for advanced technology (Aladdin platform) and ESG investing initiatives.",
+                services: ["Asset Management", "Technology Solutions", "iShares ETFs", "Alternative Investments"]
+            },
+            {
+                rank: 2,
+                name: "Vanguard Group",
+                aum: "$9.3 Trillion",
+                founded: "1975",
+                headquarters: "Malvern, Pennsylvania, USA",
+                description: "Vanguard is famous for low-cost index funds and ETFs. Its unique client-owned structure aligns the firm's interests with investors.",
+                services: ["Index Funds", "ETFs", "Mutual Funds", "Retirement Planning"]
+            },
+            {
+                rank: 3,
+                name: "Fidelity Investments",
+                aum: "$5.3 Trillion",
+                founded: "1946",
+                headquarters: "Boston, Massachusetts, USA",
+                description: "Fidelity offers a wide range of mutual funds, retirement, and brokerage services. Known for robust research and actively managed funds.",
+                services: ["Mutual Funds", "Brokerage", "Retirement Services", "Research"]
+            },
+            {
+                rank: 4,
+                name: "State Street Global Advisors",
+                aum: "$4.34 Trillion",
+                founded: "1975",
+                headquarters: "Boston, Massachusetts, USA",
+                description: "Known for SPDR ETFs and comprehensive asset management solutions. A leader in ETF innovation.",
+                services: ["ETFs", "Active Management", "Index Funds", "ETF Trading"]
+            },
+            {
+                rank: 5,
+                name: "Charles Schwab",
+                aum: "$3.5+ Trillion",
+                founded: "1971",
+                headquarters: "San Francisco, California, USA",
+                description: "Major brokerage and investment services firm. Strong in digital platforms, robo-advisors, and low-cost index funds.",
+                services: ["Brokerage", "Robo-Advisory", "Trading", "Financial Advisory"]
+            },
+            {
+                rank: 6,
+                name: "UBS Group",
+                aum: "$2.5+ Trillion",
+                founded: "1862",
+                headquarters: "Zurich, Switzerland",
+                description: "Globally established with expertise in wealth and asset management. A leader in Swiss banking and global investments.",
+                services: ["Wealth Management", "Asset Management", "Investment Banking", "Trading"]
+            },
+            {
+                rank: 7,
+                name: "Morgan Stanley",
+                aum: "$2.3+ Trillion",
+                founded: "1936",
+                headquarters: "New York, USA",
+                description: "A leader among investment banks and wealth managers. Provides comprehensive investment solutions.",
+                services: ["Investment Banking", "Wealth Management", "Asset Management", "Trading"]
+            },
+            {
+                rank: 8,
+                name: "Blackstone Inc.",
+                aum: "$2 Trillion",
+                founded: "1985",
+                headquarters: "New York, USA",
+                description: "The largest private equity firm globally. Active in real estate, hedge funds, and alternative investments.",
+                services: ["Private Equity", "Real Estate", "Hedge Funds", "Infrastructure"]
+            },
+            {
+                rank: 9,
+                name: "Wells Fargo Advisors",
+                aum: "$1.8+ Trillion",
+                founded: "1852",
+                headquarters: "Charlotte, North Carolina, USA",
+                description: "Significant U.S. footprint offering extensive investment and advisory services.",
+                services: ["Investment Advisory", "Wealth Management", "Brokerage", "Financial Planning"]
+            },
+            {
+                rank: 10,
+                name: "MFS Investment Management",
+                aum: "$1.2+ Trillion",
+                founded: "1924",
+                headquarters: "Boston, Massachusetts, USA",
+                description: "Originator of the mutual fund with a long track record and diverse investment offerings.",
+                services: ["Mutual Funds", "ETFs", "Global Investing", "Active Management"]
+            }
+        ];
+
+        // Initialize the page
+        function init() {
+            displayCompanies(companies);
+        }
+
+        // Display companies
+        function displayCompanies(list) {
+            const grid = document.getElementById('companiesGrid');
+            grid.innerHTML = '';
+
+            list.forEach(company => {
+                const card = document.createElement('div');
+                card.className = 'company-card';
+                card.innerHTML = `
+                    <div class="company-logo">${company.name.charAt(0)}</div>
+                    <span class="company-rank">#${company.rank}</span>
+                    <h3>${company.name}</h3>
+                    <div class="company-info">
+                        <p><strong>AUM:</strong> ${company.aum}</p>
+                        <p><strong>Founded:</strong> ${company.founded}</p>
+                        <p><strong>Location:</strong> ${company.headquarters}</p>
+                    </div>
+                    <button class="btn-details" onclick="showDetails('${company.name}')">View Details</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Search companies
+        function searchCompanies() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = companies.filter(company =>
+                company.name.toLowerCase().includes(searchTerm) ||
+                company.headquarters.toLowerCase().includes(searchTerm)
+            );
+            displayCompanies(filtered);
+        }
+
+        // Show details modal
+        function showDetails(companyName) {
+            const company = companies.find(c => c.name === companyName);
+            if (!company) return;
+
+            document.getElementById('modalTitle').textContent = company.name;
+            document.getElementById('modalBody').innerHTML = `
+                <p>${company.description}</p>
+                <div class="stats">
+                    <h4>Quick Facts</h4>
+                    <p><strong>Rank:</strong> #${company.rank}</p>
+                    <p><strong>Assets Under Management:</strong> ${company.aum}</p>
+                    <p><strong>Founded:</strong> ${company.founded}</p>
+                    <p><strong>Headquarters:</strong> ${company.headquarters}</p>
+                </div>
+                <div class="stats">
+                    <h4>Services & Products</h4>
+                    <ul style="list-style: none; padding-left: 10px;">
+                        ${company.services.map(service => `<li>✓ ${service}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            document.getElementById('detailsModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function (event) {
+            const modal = document.getElementById('detailsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Allow Enter key for search
+        document.getElementById('searchInput').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                searchCompanies();
+            }
+        });
+
+        // Initialize on load
+        window.onload = init;
+    </script>
+</body>
+
+</html>
